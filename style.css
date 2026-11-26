@@ -12,13 +12,15 @@
 html{-webkit-text-size-adjust:100%;background:var(--paper-0)}
 body{
   margin:0;color:var(--chalk);font:400 17px/1.65 var(--sans);padding-inline:16px;-webkit-font-smoothing:antialiased;min-height:100vh;
+  background:radial-gradient(ellipse at 45% 30%,var(--paper-2) 0%,var(--paper-1) 45%,var(--paper-0) 100%) fixed;
+}
+/* blueprint grid on its own layer, softly blurred so it stays behind the text */
+body::before{content:"";position:fixed;inset:-8px;pointer-events:none;filter:blur(1.6px);opacity:.55;
   background:
-    repeating-linear-gradient(0deg,transparent 0 159px,rgba(234,242,255,.11) 159px 160px),
-    repeating-linear-gradient(90deg,transparent 0 159px,rgba(234,242,255,.11) 159px 160px),
-    repeating-linear-gradient(0deg,transparent 0 31px,rgba(234,242,255,.055) 31px 32px),
-    repeating-linear-gradient(90deg,transparent 0 31px,rgba(234,242,255,.055) 31px 32px),
-    radial-gradient(ellipse at 45% 30%,var(--paper-2) 0%,var(--paper-1) 45%,var(--paper-0) 100%);
-  background-attachment:fixed;
+    repeating-linear-gradient(0deg,transparent 0 158px,rgba(234,242,255,.16) 158px 160px),
+    repeating-linear-gradient(90deg,transparent 0 158px,rgba(234,242,255,.16) 158px 160px),
+    repeating-linear-gradient(0deg,transparent 0 31px,rgba(234,242,255,.07) 31px 32px),
+    repeating-linear-gradient(90deg,transparent 0 31px,rgba(234,242,255,.07) 31px 32px);
 }
 /* paper grain */
 body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
@@ -44,12 +46,6 @@ nav a{text-decoration:none}
 .intro p{margin:0 0 14px;color:var(--muted);max-width:60ch}
 .intro .motto{font:400 14px/1.4 var(--mono);color:var(--faint);margin-top:20px}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1.5px solid var(--line-strong);background:var(--panel);margin:8px 0 0}
-.stat{padding:14px 16px;border-left:1.5px solid var(--line-strong)}
-.stat:first-child{border-left:0}
-.stat b{display:block;font:700 40px/1 var(--hand);color:var(--chalk)}
-.stat span{font:400 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--sky)}
-.stat.v b{color:var(--orange)}
 
 section{padding-block:44px;border-top:1.5px dashed var(--line)}
 h2{font:700 40px/1 var(--hand);margin:0 0 6px}
@@ -68,32 +64,12 @@ h2+.sub{font:400 13px/1.5 var(--mono);color:var(--faint);margin:0 0 26px}
 .badge.parked{color:var(--muted);border-style:dashed}
 .empty,.note{font-size:14.5px;color:var(--muted);margin:14px 0 0}
 
-/* how it works */
-.steps{list-style:none;margin:0;padding:0;counter-reset:s}
-.steps li{position:relative;padding:0 0 22px 56px;counter-increment:s}
-.steps li::before{content:counter(s);position:absolute;left:0;top:-6px;width:38px;height:38px;border:1.5px solid var(--chalk);border-radius:50%;
-  display:grid;place-items:center;font:700 24px/1 var(--hand)}
-.steps li:not(:last-child)::after{content:"";position:absolute;left:19px;top:36px;bottom:2px;border-left:1.5px dashed var(--line-strong)}
-.steps b{font-weight:600}
-.steps .who{font:400 12.5px/1.4 var(--mono);color:var(--sky);display:block;margin-bottom:2px}
-.checks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
-.check{border:1.5px solid var(--line-strong);background:var(--panel);padding:14px 16px}
-.check h4{margin:0 0 6px;font:700 24px/1 var(--hand);color:var(--orange)}
-.check p{margin:0;font-size:14.5px;color:var(--muted)}
-
 /* team */
 .team{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 .agent{text-align:center}
 .agent svg{width:64px;height:64px;display:block;margin:0 auto 6px}
 .agent b{display:block;font:700 26px/1 var(--hand)}
 .agent span{font:400 12px/1.4 var(--mono);color:var(--faint)}
-
-/* ladder */
-.ladder{width:100%;border-collapse:collapse;font-size:15px}
-.ladder th,.ladder td{border-bottom:1px solid var(--line);padding:10px 10px 10px 0;text-align:left;vertical-align:top}
-.ladder th{font:400 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--sky);border-bottom-color:var(--line-strong)}
-.ladder td:first-child{font:700 26px/1 var(--hand);color:var(--orange);width:44px}
-.ladder td:last-child{color:var(--muted)}
 
 .about p{margin:0 0 14px;max-width:62ch}
 .contact{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:15px;margin:18px 0 0}
@@ -129,13 +105,9 @@ details summary{cursor:pointer;font:400 13px/1.4 var(--mono);color:var(--sky);ma
 
 @media (max-width:640px){
   header.top{flex-direction:column;align-items:flex-start;gap:14px;padding-block:22px}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .stat:nth-child(3){border-left:0}
-  .stat:nth-child(n+3){border-top:1.5px solid var(--line-strong)}
   .thm{grid-template-columns:40px 1fr}
   .thm .badge{grid-column:2;justify-self:start;order:3}
   .thm .quote{grid-column:2}
-  .checks{grid-template-columns:1fr}
   .team{grid-template-columns:repeat(3,1fr);row-gap:20px}
   .titleblock{grid-template-columns:1fr 1fr}
   .titleblock div:nth-child(3){grid-column:1/3;border-left:0;border-top:1.5px solid var(--line-strong)}

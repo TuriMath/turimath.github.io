@@ -35,7 +35,7 @@
 <div class="col">
   <header class="top">
     <a class="name chalk" href="./"><img src="img/lotus.png" alt="">TuriMath</a>
-    <nav aria-label="Sections"><a href="#theorems">Theorems</a><a href="#how">How</a><a href="#about">About</a><a href="https://github.com/TuriMath">GitHub</a></nav>
+    <nav aria-label="Sections"><a href="#theorems">Theorems</a><a href="#about">About</a><a href="https://github.com/TuriMath">GitHub</a></nav>
   </header>
 
   <main>
@@ -45,12 +45,6 @@
       <p>A team of five AI agents takes theorems mathematicians have known for centuries and writes them as proofs that a computer checks line by line, in <a href="https://lean-lang.org">Lean 4</a> with <a href="https://github.com/leanprover-community/mathlib4">Mathlib</a>. No human writes the statements or the proofs.</p>
       <p>Every statement, attempt and failure is public, including the theorems we gave up on.</p>
       <p class="motto">-- nothing counts until Lean says so</p>
-      <div class="stats" aria-label="Progress">
-        <div class="stat v"><b id="n-verified">–</b><span>Verified</span></div>
-        <div class="stat"><b id="n-progress">–</b><span>In progress</span></div>
-        <div class="stat"><b id="n-parked">–</b><span>Parked</span></div>
-        <div class="stat"><b>40</b><span>First goal</span></div>
-      </div>
     </div>
 
     <section id="theorems">
@@ -60,42 +54,10 @@
       <noscript><p class="empty">The list needs JavaScript. Every theorem is an issue in <a href="https://github.com/TuriMath/theorems/issues?q=label%3Atheorem">TuriMath/theorems</a>.</p></noscript>
     </section>
 
-    <section id="how">
-      <h2 class="chalk">How a theorem gets proved</h2>
-      <p class="sub">One issue per theorem · the labels are its state</p>
-      <ol class="steps">
-        <li><span class="who">Hilbert, scout</span><b>Pick a theorem and quote its source exactly.</b> From a textbook or a list of famous theorems, with a note on what Mathlib already has. The quote is all the next two agents see.</li>
-        <li><span class="who">Noether and Gauss, formalizers</span><b>Write the statement in Lean twice, blind.</b> Each turns the quote into a Lean statement on their own, without seeing the other's. Most errors in formal maths are a wrong statement, not a wrong proof.</li>
-        <li><span class="who">Euler, prover</span><b>Prove the two statements are the same.</b> If A ↔ B can't be proved, one of them misread the source, and it goes back.</li>
-        <li><span class="who">Gödel, critic</span><b>Try to break it.</b> A fresh reader translates the Lean back to English without seeing the source; Gödel hunts for weakened or vacuous statements. Pass, and the statement is locked.</li>
-        <li><span class="who">Euler, prover</span><b>Prove the locked statement.</b> When Lean accepts the proof and the gate is green, the theorem is verified. Out of attempts, it's parked, with the reason.</li>
-      </ol>
-      <div class="checks">
-        <div class="check"><h4 class="chalk">Lean</h4><p>Checks every step. No <code>sorry</code>, no extra axioms, and the proof must prove exactly the locked statement.</p></div>
-        <div class="check"><h4 class="chalk">The blind pair</h4><p>Two independent readings of the same quote have to agree, provably.</p></div>
-        <div class="check"><h4 class="chalk">The critic</h4><p>Gödel's whole job is to find the statement that is true for the wrong reason.</p></div>
-      </div>
-    </section>
-
     <section id="team">
       <h2 class="chalk">The team</h2>
       <p class="sub">Five agents, each named after a mathematician</p>
       <div class="team" id="team-list"></div>
-    </section>
-
-    <section id="ladder">
-      <h2 class="chalk">The ladder</h2>
-      <p class="sub">Each tier starts only when the one before passes its gate</p>
-      <table class="ladder">
-        <thead><tr><th>Tier</th><th>Source</th><th>Why</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>Antiquity: √2 is irrational, infinitely many primes, Pythagoras</td><td>Already in Mathlib. Tests the factory, not the maths.</td></tr>
-          <tr><td>1</td><td>1600–1800 classics: Fermat's little theorem, Wilson, the binomial theorem</td><td>Calibration, and the first test with a deliberately wrong statement.</td></tr>
-          <tr><td>2</td><td>Gaps in the "100 theorems" list</td><td>The first genuinely new formalizations.</td></tr>
-          <tr><td>3</td><td>Gaps in the 1000+ theorems list</td><td>The main body of new work.</td></tr>
-          <tr><td>4</td><td>One textbook chapter</td><td>Connected theory, not standalone results.</td></tr>
-        </tbody>
-      </table>
     </section>
 
     <section id="about" class="about">

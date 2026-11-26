@@ -15,10 +15,6 @@ for (const [name, role, mark] of TEAM) {
 const fmt = d => new Date(d).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
 
 loadTheorems().then(list => {
-  const count = f => list.filter(f).length;
-  document.getElementById('n-verified').textContent = count(t => t.stage === 'verified');
-  document.getElementById('n-parked').textContent = count(t => t.stage === 'parked');
-  document.getElementById('n-progress').textContent = count(t => t.stage !== 'verified' && t.stage !== 'parked');
   const latest = list.map(t => t.updated).sort().pop();
   document.getElementById('updated').textContent = latest ? fmt(latest) : '–';
 
