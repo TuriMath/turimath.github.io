@@ -19,13 +19,10 @@ loadTheorems().then(list => {
   try {
     thmList.replaceChildren();
     if (!list.length) { thmList.append(el('p', 'The first theorem is being picked.', 'empty')); return; }
-    list.forEach((t, i) => {
-      const href = 'theorem.html?n=' + t.number;
+    list.forEach(t => {
       const row = el('article', null, 'thm');
-      const h = el('h3'); const a = el('a', t.name); a.href = href; h.append(a);
-      row.append(el('span', String(i + 1).padStart(2, '0'), 'no chalk'), h, badge(t),
-        el('p', 'Tier ' + t.tier + ' · issue #' + t.number, 'meta'));
-      if (t.quote) row.append(el('p', '“' + t.quote + '”', 'quote'));
+      const gh = el('a', 'GitHub ↗'); gh.href = t.url; gh.rel = 'noopener';
+      row.append(el('h3', t.name), gh);
       thmList.append(row);
     });
   } catch (e) {
