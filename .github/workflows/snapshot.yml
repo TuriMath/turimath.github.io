@@ -1,0 +1,26 @@
+# Keeps theorems.json (the site's fallback when visitors hit GitHub's anonymous rate limit) in step with the
+# theorem issues in TuriMath/theorems. Commits only when something changed; the commit rebuilds Pages.
+name: theorems snapshot
+on:
+  schedule: [{cron: "*/15 * * * *"}]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read theorem issues
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          gh api "repos/TuriMath/theorems/issues?labels=theorem&state=all&per_page=100&sort=created&direction=asc" \
+            --jq '[.[] | select(.pull_request | not) | {number, title, body, state, html_url, updated_at, labels: [.labels[].name]}]' \
+            > theorems.json.new
+          python3 -c "import json; json.load(open('theorems.json.new'))"
+          mv theorems.json.new theorems.json
+      - name: Commit if changed
+        run: |
+          git diff --quiet -- theorems.json && exit 0
+          git config user.name "turimath-snapshot"; git config user.email "actions@users.noreply.github.com"
+          git add theorems.json && git commit -m "Snapshot theorem issues" && git push

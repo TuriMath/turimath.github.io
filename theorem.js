@@ -12,8 +12,6 @@ loadTheorems().then(async list => {
   const t = list.find(x => x.number === n);
   if (!t) return fail('No theorem with that number. Go back to the list.');
   document.title = t.name + ' · TuriMath';
-  document.getElementById('tb-title').textContent = ('TURIMATH · ' + t.name).toUpperCase();
-  document.getElementById('tb-issue').textContent = '#' + t.number;
 
   const meta = el('div', null, 'meta');
   meta.append(badge(t), 'Tier ' + t.tier, ' · ', link(t.url, 'issue #' + t.number));

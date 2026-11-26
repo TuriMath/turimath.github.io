@@ -12,25 +12,27 @@ for (const [name, role, mark] of TEAM) {
   team.append(a);
 }
 
-const fmt = d => new Date(d).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+const thmList = document.getElementById('thm-list');
+const showError = html => thmList.replaceChildren(Object.assign(el('p', null, 'empty'), {innerHTML: html}));
 
 loadTheorems().then(list => {
-  const latest = list.map(t => t.updated).sort().pop();
-  document.getElementById('updated').textContent = latest ? fmt(latest) : '–';
-
-  const root = document.getElementById('thm-list');
-  root.replaceChildren();
-  if (!list.length) { root.append(el('p', 'The first theorem is being picked.', 'empty')); return; }
-  list.forEach((t, i) => {
-    const href = 'theorem.html?n=' + t.number;
-    const row = el('article', null, 'thm');
-    const h = el('h3'); const a = el('a', t.name); a.href = href; h.append(a);
-    row.append(el('span', String(i + 1).padStart(2, '0'), 'no chalk'), h, badge(t),
-      el('p', 'Tier ' + t.tier + ' · issue #' + t.number, 'meta'));
-    if (t.quote) row.append(el('p', '“' + t.quote + '”', 'quote'));
-    root.append(row);
-  });
-}).catch(() => {
-  document.getElementById('thm-list').replaceChildren(
-    Object.assign(el('p', null, 'empty'), {innerHTML: 'Couldn\'t reach GitHub just now. Every theorem is an issue in <a href="https://github.com/TuriMath/theorems/issues?q=label%3Atheorem">TuriMath/theorems</a>.'}));
+  try {
+    thmList.replaceChildren();
+    if (!list.length) { thmList.append(el('p', 'The first theorem is being picked.', 'empty')); return; }
+    list.forEach((t, i) => {
+      const href = 'theorem.html?n=' + t.number;
+      const row = el('article', null, 'thm');
+      const h = el('h3'); const a = el('a', t.name); a.href = href; h.append(a);
+      row.append(el('span', String(i + 1).padStart(2, '0'), 'no chalk'), h, badge(t),
+        el('p', 'Tier ' + t.tier + ' · issue #' + t.number, 'meta'));
+      if (t.quote) row.append(el('p', '“' + t.quote + '”', 'quote'));
+      thmList.append(row);
+    });
+  } catch (e) {
+    console.error('TuriMath: could not draw the theorem list', e);
+    showError('Something went wrong drawing the list. Every theorem is an issue in <a href="https://github.com/TuriMath/theorems/issues?q=label%3Atheorem">TuriMath/theorems</a>.');
+  }
+}).catch(e => {
+  console.error('TuriMath: no theorem data', e);
+  showError('Couldn\'t reach GitHub just now. Every theorem is an issue in <a href="https://github.com/TuriMath/theorems/issues?q=label%3Atheorem">TuriMath/theorems</a>.');
 });

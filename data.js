@@ -38,16 +38,27 @@ const STATUS = {
   verified: 'Verified', parked: 'Parked',
 };
 
-// One API call per visit (cached for 5 minutes): GitHub allows 60 unauthenticated calls an hour per visitor.
+// Live first: one API call per visit, cached 5 minutes (GitHub allows 60 anonymous calls an hour per IP).
+// If GitHub refuses (rate limit, network), fall back to theorems.json: a snapshot of the same issues that a
+// GitHub Action in this repo refreshes every 15 minutes (.github/workflows/snapshot.yml).
 async function loadTheorems() {
   const key = 'turimath-theorems';
   try {
     const c = JSON.parse(sessionStorage.getItem(key) || 'null');
     if (c && Date.now() - c.at < 5 * 60e3) return c.list;
   } catch (e) { /* storage unavailable: just fetch */ }
-  const r = await fetch(API + '/issues?labels=theorem&state=all&per_page=100&sort=created&direction=asc');
-  if (!r.ok) throw new Error('GitHub said ' + r.status);
-  const list = (await r.json()).filter(i => !i.pull_request).map(parseIssue);
+  let issues;
+  try {
+    const r = await fetch(API + '/issues?labels=theorem&state=all&per_page=100&sort=created&direction=asc');
+    if (!r.ok) throw new Error('GitHub said ' + r.status);
+    issues = await r.json();
+  } catch (e) {
+    console.warn('TuriMath: live GitHub read failed, using the snapshot', e);
+    const r = await fetch('theorems.json', {cache: 'no-cache'});
+    if (!r.ok) throw new Error('no snapshot');
+    issues = await r.json();
+  }
+  const list = issues.filter(i => !i.pull_request).map(parseIssue);
   try { sessionStorage.setItem(key, JSON.stringify({at: Date.now(), list})); } catch (e) { /* fine */ }
   return list;
 }
