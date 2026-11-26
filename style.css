@@ -1,9 +1,9 @@
 /* TuriMath: blueprint paper, chalk ink. Same palette as the org banner (TuriMath/.github brand/src). */
 :root{
   color-scheme:dark;
-  --paper-0:#0B2A57; --paper-1:#123E7C; --paper-2:#17498F;
+  --paper-0:#050F24; --paper-1:#0A1D40; --paper-2:#0F2856;
   --chalk:#EAF2FF; --muted:#B4C8E6; --faint:#7E9BC6; --sky:#8FC1FF; --orange:#FF7A1A;
-  --line:rgba(234,242,255,.18); --line-strong:rgba(234,242,255,.35); --panel:rgba(11,42,87,.55);
+  --line:rgba(234,242,255,.18); --line-strong:rgba(234,242,255,.35); --panel:rgba(5,15,36,.55);
   --hand:"Caveat",cursive;
   --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
