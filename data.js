@@ -1,7 +1,7 @@
-// Theorems come straight from GitHub: every issue labelled `theorem` in TuriMath/theorems is one theorem, and its
-// labels are its state (docs/pipeline.md in TuriMath/mathlab). Nothing to edit here when the factory moves.
+// Theorems come straight from GitHub: every issue labelled `theorem` anywhere in the TuriMath org is one theorem
+// (roadmap issues in TuriMath/theorems, newer ones in their own repo), and its labels are its state (docs/pipeline.md in TuriMath/mathlab). Nothing to edit here when the factory moves.
 const REPO = 'TuriMath/theorems';
-const API = 'https://api.github.com/repos/' + REPO;
+const API = 'https://api.github.com/search/issues?q=' + encodeURIComponent('org:TuriMath label:theorem is:issue') + '&per_page=100&sort=created&order=asc';
 const RAW = 'https://raw.githubusercontent.com/' + REPO + '/main/';
 const BLOB = 'https://github.com/' + REPO + '/blob/main/';
 
@@ -26,8 +26,10 @@ function parseIssue(i) {
   const tier = (labels.find(l => /^tier:\d/.test(l)) || 'tier:?').slice(5);
   const stage = labels.includes('verified') ? 'verified' : labels.includes('parked') ? 'parked'
     : (labels.find(l => l.startsWith('stage:')) || 'stage:formalize').slice(6);
+  // The issue's own repo (search results carry repository_url); a theorem filed in its own repo is that repo.
+  const home = (i.repository_url || 'https://api.github.com/repos/' + REPO).replace(/^.*\/repos\//, '');
   return {
-    number: i.number, url: i.html_url, repo: field('Repo').trim(), name: i.title.replace(/^Theorem:\s*/, ''), slug: field('Slug').trim(),
+    number: i.number, home, url: i.html_url, repo: field('Repo').trim() || (home !== REPO ? home : ''), name: i.title.replace(/^Theorem:\s*/, ''), slug: field('Slug').trim(),
     tier, stage, quote, ref, mathlib: section('What Mathlib has'), closed: i.state === 'closed',
     updated: i.updated_at,
   };
@@ -48,16 +50,16 @@ const STATUS = {
 // If GitHub refuses (rate limit, network), fall back to theorems.json: a snapshot of the same issues that a
 // GitHub Action in this repo refreshes every 15 minutes (.github/workflows/snapshot.yml).
 async function loadTheorems() {
-  const key = 'turimath-theorems';
+  const key = 'turimath-theorems-v2';
   try {
     const c = JSON.parse(sessionStorage.getItem(key) || 'null');
     if (c && Date.now() - c.at < 5 * 60e3) return c.list;
   } catch (e) { /* storage unavailable: just fetch */ }
   let issues;
   try {
-    const r = await fetch(API + '/issues?labels=theorem&state=all&per_page=100&sort=created&direction=asc');
+    const r = await fetch(API);
     if (!r.ok) throw new Error('GitHub said ' + r.status);
-    issues = await r.json();
+    issues = (await r.json()).items;
   } catch (e) {
     console.warn('TuriMath: live GitHub read failed, using the snapshot', e);
     const r = await fetch('theorems.json', {cache: 'no-cache'});
