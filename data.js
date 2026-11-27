@@ -27,11 +27,17 @@ function parseIssue(i) {
   const stage = labels.includes('verified') ? 'verified' : labels.includes('parked') ? 'parked'
     : (labels.find(l => l.startsWith('stage:')) || 'stage:formalize').slice(6);
   return {
-    number: i.number, url: i.html_url, name: i.title.replace(/^Theorem:\s*/, ''), slug: field('Slug').trim(),
+    number: i.number, url: i.html_url, repo: field('Repo').trim(), name: i.title.replace(/^Theorem:\s*/, ''), slug: field('Slug').trim(),
     tier, stage, quote, ref, mathlib: section('What Mathlib has'), closed: i.state === 'closed',
     updated: i.updated_at,
   };
 }
+
+// Each theorem is its own repo (TuriMath/theorems#8). The theorem issue names it with a `**Repo:** TuriMath/<name>` line.
+// Until that line is there, fall back to the issue so no link is ever dead.
+const repoUrl = t => (t.repo ? 'https://github.com/' + t.repo : t.url);
+const rawOf = (t, path) => (t.repo ? 'https://raw.githubusercontent.com/' + t.repo + '/main/' : RAW) + path;
+const blobOf = (t, path) => (t.repo ? 'https://github.com/' + t.repo + '/blob/main/' : BLOB) + path;
 
 const STATUS = {
   formalize: 'Formalizing', equiv: 'Matching A ↔ B', critique: 'In critique', prove: 'Proving',

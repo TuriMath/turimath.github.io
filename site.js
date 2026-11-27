@@ -21,7 +21,7 @@ loadTheorems().then(list => {
     if (!list.length) { thmList.append(el('p', 'The first theorem is being picked.', 'empty')); return; }
     list.forEach(t => {
       const row = el('article', null, 'thm');
-      const gh = el('a', 'GitHub ↗'); gh.href = t.url; gh.rel = 'noopener';
+      const gh = el('a', 'GitHub ↗'); gh.href = repoUrl(t); gh.rel = 'noopener';
       row.append(el('h3', t.name), gh);
       thmList.append(row);
     });
