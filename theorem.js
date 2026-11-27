@@ -1,5 +1,7 @@
 // One theorem: the source quote, where it is in the pipeline, and its Lean files once they exist on main.
-const n = Number(new URLSearchParams(location.search).get('n'));
+const q = new URLSearchParams(location.search);
+const n = Number(q.get('n'));
+const home = q.get('r') || 'TuriMath/theorems';  // repo holding the issue; ?r=TuriMath/<name>&n=<issue>
 const head = document.getElementById('head');
 const doc = document.getElementById('doc');
 const fail = msg => head.replaceChildren(el('p', msg, 'empty'));
@@ -9,7 +11,7 @@ const note = () => { const p = el('p', null, 'note'); doc.append(p); return p; }
 const link = (href, text) => Object.assign(el('a', text), {href, rel: 'noopener'});
 
 loadTheorems().then(async list => {
-  const t = list.find(x => x.number === n);
+  const t = list.find(x => x.number === n && x.home === home);
   if (!t) return fail('No theorem with that number. Go back to the list.');
   document.title = t.name + ' · TuriMath';
 
